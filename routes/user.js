@@ -112,4 +112,33 @@ router.post('/verifyOTP', (req, res)=>{
     })
 });
 
+router.post('/generateOTP', (req, res) => {
+    let email = req.body.email;
+    let userCode = req.body.userCode;
+    let otp = authUtils.generateOTP()
+    User.findOne({
+            email: email,
+            userCode: userCode,
+            isActive: true
+    })
+    .then(userData => {
+        userData.otp = otp;
+        let user = new User(userData)
+        return user.save()
+    })
+    .then(userData => {
+        let url = req.body.url || 'localhost:3000';
+        let text = `Go to ${url}/verifyOTP and enter ${otp}`;        
+
+        let emailUtility = emailUtils.sendEmail(userData.email, text);
+        emailUtility.transporter.sendMail(emailUtility.mailOptions, (err, data)=>{
+            if(err) {
+                res.status(400).send('email not sent');
+            } else {
+                res.status(200).send('Email generated and sent, check email for otp');
+            }
+        });
+    });
+})
+
 module.exports = router;
