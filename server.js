@@ -1,6 +1,8 @@
 'use strict';
 
-const express = require('exoress');
+require('dotenv').config();
+
+const express = require('express');
 
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -16,12 +18,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(userRoutes);
 
-mongoose.connect(`mongodb+srv://${mongodbUser}:${mongodbPassword}root@node-mak-btumf.mongodb.net/test?retryWrites=true&w=majority`,
-{
-    useMongoClient: true
-});
+mongoose.connect(`mongodb+srv://${process.env.mongodbUser}:${process.env.mongodbPassword}@node-mak-btumf.mongodb.net/test?retryWrites=true&w=majority`,
+{useNewUrlParser: true});
 
-const port = node.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 app.listen(port, ()=>{
     console.log(`Server started on port ${port}`)

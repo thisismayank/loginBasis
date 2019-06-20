@@ -8,8 +8,8 @@ const router = express.Router();
 const cors = require('cors');
 
 // utils
-const authUtils = require('../utils/122-auth-utils');
-const emailUtils = require('../utils/133-email-utils');
+const authUtils = require('../utils/111-auth-utils');
+const emailUtils = require('../utils/222-email-utils');
 
 // jwt
 const jwt = require('jsonwebtoken');
