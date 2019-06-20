@@ -25,6 +25,20 @@ router.get('/', (req, res)=>{
     res.status(200).send('');
 });
 
+router.get('/check/:phoneNumber', (req, res)=>{
+    const phoneNumber = Number(req.params.phoneNumber);
+    User.findOne({
+        phoneNumber: phoneNumber
+    })
+    .then(user => {
+        if(user) {
+            res.status(200).send({success: true, message:'User exists', statusCode: 200, data: phoneNumber});
+        } else {
+            res.status(200).send({success: false, message:'User does not exist', statusCode: 200, data: phoneNumber});
+        }
+    })
+});
+
 router.post('/signup', (req, res, next)=>{
     const body = req.body;
     const otp = authUtils.generateOTP();
@@ -146,7 +160,7 @@ router.post('/generateOTP', (req, res) => {
             if(err) {
                 res.status(400).send('email not sent');
             } else {
-                res.status(200).send('Email generated and sent, check email for otp');
+                res.status(200).send({success: true, message:'Email generated and sent, check email for otp', data: userCode});
             }
         });
     });
