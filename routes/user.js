@@ -150,6 +150,32 @@ router.post('/generateOTP', (req, res) => {
             }
         });
     });
-})
+});
+
+router.post('/forgotPassword', (req, res, next)=>{
+    // let userCode = jwt.verify(JSON.parse(req.body.token), SECRET_KEY).userCode;
+
+    let body = req.body;
+    let password = authUtils.hashPassword(req.body.password).toString();
+    User.findOne({
+        userCode: body.userCode,
+        email: body.email,
+        isActive: true            
+    })
+    .then(userData=> {
+        if(userData.otp) {
+            res.redirect('/');
+        }
+        userData.password = password;
+        let user = new User(userData);
+        return user.save();
+    })
+    .then(userData => {
+        if(!userData) {
+            res.status(400).send('Password not updated');
+        }
+        res.status(200).send('Password updated successfully');
+    });
+});
 
 module.exports = router;
