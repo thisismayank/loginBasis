@@ -47,7 +47,18 @@ router.post('/signup', (req, res, next)=>{
         if(err) {
             res.status(401).send('User Not Created');
         }
-        res.status(200).send({success: true, message: 'User Created successfully', data: data});
+
+        let url = body.url || 'localhost:3000';
+        let text = `Go to ${url}/verifyOTP and enter ${otp}`;
+       
+        let emailUtility = emailUtils.sendEmail(user.dataValues.email, text);
+        emailUtility.transporter.sendMail(emailUtility.mailOptions, (err, data)=>{
+            if(err) {
+                res.status(400).send('User not created');
+            } else {
+                res.status(200).send('User created, check email for otp');
+            }
+        });
     });
 });
 
