@@ -21,6 +21,10 @@ const mongoose = require('mongoose');
 // to handle cross-origin-requests
 router.use(cors());
 
+router.get('/', (req, res)=>{
+    res.status(200).send('');
+});
+
 router.post('/signup', (req, res, next)=>{
     const body = req.body;
     const otp = authUtils.generateOTP();
@@ -30,7 +34,7 @@ router.post('/signup', (req, res, next)=>{
         lastName: body.lastName ? body.lastName.toString():null,
         phoneNumber: body.phoneNumber.toString(),
         userCode: body.userCode.toString(),
-        email: email.userCode.toString(),
+        email: body.email.toString(),
         password: authUtils.hashPassword(req.body.password).toString(),
         otp: otp,
         isActive: true
@@ -42,8 +46,33 @@ router.post('/signup', (req, res, next)=>{
         if(err) {
             res.status(401).send('User Not Created');
         }
-        res.status(200).send('User Created successfully');
+        res.status(200).send({success: true, message: 'User Created successfully', data: data});
     });
+});
+
+router.post('/login', (req, res, next)=>{
+    const body = req.body;
+    User.findOne({
+            phoneNumber: Number(body.phoneNumber),
+            isActive: true
+    })
+    .then((user, err)=>{
+        if(err) {
+            res.status(401).send({success: false, message: 'User not found, Please sign up', redirectTo: '/signup'});
+        }
+
+        if (authUtils.comparePassword(req.body.password, user.password)) {
+            if(user.otp) {
+                res.status(401).send({success: false, message: 'go to the link sent in the email to activate account'});
+            } else {
+                let token = jwt.sign(user.toJSON(), SECRET_KEY);
+                res.json({token: token});
+            }
+
+        } else {
+            res.status(401).send('Wrong Username or password');
+        }
+    })
 })
 
 module.exports = router;
