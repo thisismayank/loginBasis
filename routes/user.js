@@ -37,6 +37,7 @@ router.post('/signup', (req, res, next)=>{
         email: body.email.toString(),
         password: authUtils.hashPassword(req.body.password).toString(),
         otp: otp,
+        loginRetryCount: 0,
         isActive: true
     };
 
@@ -74,5 +75,41 @@ router.post('/login', (req, res, next)=>{
         }
     })
 })
+
+router.post('/verifyOTP', (req, res)=>{
+    let check = false;
+    User.findOne({
+            userCode: req.body.userCode,
+            otp: Number(req.body.otp),
+            isActive: true
+    })
+    .then((userData, err) => {
+        if(err || !userData) {
+            check = true;
+            return User.findOne({ userCode: req.body.userCode, otp: {$ne: null}, isActive: true});
+        } else {
+            userData.otp = null;
+            let user = new User(userData);
+            return user.save();
+        }
+    })
+    .then((userData, err)=>{
+        if(err) {
+            res.status(401).send('Some error occured');
+        }
+        if(check) {
+            userData.loginRetryCount = userData.loginRetryCount + 1;
+            let user = new User(userData);
+            return user.save();
+        } else {
+            res.status(200).send({success: true, redirectTo: '/login'});
+        }
+    })
+    .then((user, err)=>{
+        if(check) {
+            res.redirect('/');
+        }
+    })
+});
 
 module.exports = router;

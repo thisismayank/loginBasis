@@ -26,6 +26,7 @@ const userSchema = mongoose.Schema({
         required: true
     },
     otp: Number,
+    loginRetryCount: Number,
     isActive: Boolean,
 });
 
