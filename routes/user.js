@@ -153,7 +153,6 @@ router.post('/generateOTP', (req, res) => {
 });
 
 router.post('/forgotPassword', (req, res, next)=>{
-    // let userCode = jwt.verify(JSON.parse(req.body.token), SECRET_KEY).userCode;
 
     let body = req.body;
     let password = authUtils.hashPassword(req.body.password).toString();
@@ -178,4 +177,36 @@ router.post('/forgotPassword', (req, res, next)=>{
     });
 });
 
+router.post('/updatePassword', (req, res, next)=> {
+    let payload;
+    try {
+    payload = jwt.verify(JSON.parse(req.body.token), SECRET_KEY);
+    } catch(err) {
+        res.status(401).send({success: false, message: 'Unauthorized', statusCode: 401, redirectTo: '/'});
+        return 0;
+    }
+
+    let userCode = payload.userCode;
+    let password = payload.password;
+
+    User.findOne({
+        userCode: userCode,
+    })
+    .then(userData => {
+        if(!authUtils.comparePassword(req.body.currentPassword, password)) {
+            res.status(401).send({success: false, message:'Wrong username password', redirectTo: '/'});
+        } else {
+            let newPassword = authUtils.hashPassword(req.body.newPassword).toString();
+            userData.password = newPassword;
+            let user = new User(userData);
+            return user.save()
+        }
+    })
+    .then(userData => {
+        if(!userData) {
+            res.status(400).send('Password not updated');
+        }
+        res.status(200).send('Password updated successfully');
+    });
+});
 module.exports = router;
