@@ -1,7 +1,7 @@
 
-<div class="container">
+<div class="container" *ngIf="showPhoneNumberScreen">
   <h1>Login Form</h1>
-  <div class="form-group" *ngIf="showPhoneNumberScreen">
+  <div class="form-group" >
       <label> Phone Number </label>
       <input [(ngModel)]='phoneNumber' type="tel" pattern="^[6789]\d{9}$" minlength="10" maxlength="10" placeholder="Enter only 10 digits" class="form-control">
   </div>
@@ -14,7 +14,7 @@
 </div>
 
 <div class="container" *ngIf="showPasswordScreen">
-  <h1>Login Form</h1>
+  <h1>Enter Password</h1>
   <div class="form-group">
       <label> Password </label>
       <input [(ngModel)]='password' type="password" class="form-control">

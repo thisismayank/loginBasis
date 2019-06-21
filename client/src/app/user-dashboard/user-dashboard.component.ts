@@ -26,6 +26,12 @@ export class UserDashboardComponent implements OnInit {
   toggle() {
     this.change = true;
   }
+
+  logout() {
+    localStorage.removeItem('token');
+    this._router.navigate(['/']);
+  }
+  
   updatePassword() {
     this.token = this._authService.getToken();
     this._userService.updatePassword(this.token, this.currentPassword, this.newPassword).toPromise()

@@ -100,7 +100,7 @@ router.post('/login', (req, res, next)=>{
             }
 
         } else {
-            res.status(201).send({status: false, message:'Wrong Username or password', redirectTo: 'error'});
+            res.status(201).send({success: false, message:'Wrong Username or password', redirectTo: 'error'});
         }
     })
 })

@@ -32,6 +32,7 @@ import { UserDashboardComponent } from './user-dashboard/user-dashboard.componen
       { path: 'signup', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
       { path: 'user', component: UserDashboardComponent },
+      { path: '', redirectTo: '/login', pathMatch: 'full' },
 
     ])
   ],

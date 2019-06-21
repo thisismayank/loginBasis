@@ -19,7 +19,13 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(userRoutes);
 
 mongoose.connect(`mongodb+srv://${process.env.mongodbUser}:${process.env.mongodbPassword}@node-mak-btumf.mongodb.net/test?retryWrites=true&w=majority`,
-{useNewUrlParser: true});
+{useNewUrlParser: true})
+.then(db =>{
+    console.log('Connection to database successful');
+})
+.catch(err => {
+    console.log('error connecting to database', JSON.stringify({name: err.name, errorLabel: err.errorLabels}, null, 2));
+});
 
 const port = process.env.PORT || 3000;
 
