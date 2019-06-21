@@ -13,13 +13,15 @@ import { RegisterComponent } from './register/register.component';
 
 import { UserService } from './user.service';
 import { AuthService } from './auth.service';
+import { UserDashboardComponent } from './user-dashboard/user-dashboard.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    UserDashboardComponent
   ],
   imports: [
     BrowserModule,
@@ -27,8 +29,10 @@ import { AuthService } from './auth.service';
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: 'register', component: RegisterComponent },
+      { path: 'signup', component: RegisterComponent },
       { path: 'login', component: LoginComponent },
+      { path: 'user', component: UserDashboardComponent },
+
     ])
   ],
   providers: [

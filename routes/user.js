@@ -32,7 +32,11 @@ router.get('/check/:phoneNumber', (req, res)=>{
     })
     .then(user => {
         if(user) {
-            res.status(200).send({success: true, message:'User exists', statusCode: 200, data: phoneNumber});
+            if(user.otp) {
+                res.status(200).send({success: true, message:'User exists', statusCode: 200, redirectTo: 'otp', data: { userCode:user.userCode, email: user.email}});
+            } else {
+                res.status(200).send({success: true, message:'User exists', statusCode: 200, redirectTo: 'password'});
+            }
         } else {
             res.status(200).send({success: false, message:'User does not exist', statusCode: 200, data: phoneNumber});
         }
@@ -59,7 +63,7 @@ router.post('/signup', (req, res, next)=>{
     user.save()
     .then((user, err)=>{
         if(err) {
-            res.status(401).send('User Not Created');
+            res.status(201).send({success: false, message:'User Not Created'});
         }
 
         let url = body.url || 'localhost:3000';
@@ -68,9 +72,9 @@ router.post('/signup', (req, res, next)=>{
         let emailUtility = emailUtils.sendEmail(user.dataValues.email, text);
         emailUtility.transporter.sendMail(emailUtility.mailOptions, (err, data)=>{
             if(err) {
-                res.status(400).send('User not created');
+                res.status(201).send({success: false, message:'User not created'});
             } else {
-                res.status(200).send('User created, check email for otp');
+                res.status(200).send({success: true, message:'User created, check email for otp'});
             }
         });
     });
@@ -84,19 +88,19 @@ router.post('/login', (req, res, next)=>{
     })
     .then((user, err)=>{
         if(err) {
-            res.status(401).send({success: false, message: 'User not found, Please sign up', redirectTo: '/signup'});
+            res.status(201).send({success: false, message: 'User not found, Please sign up', redirectTo: 'signup'});
         }
 
         if (authUtils.comparePassword(req.body.password, user.password)) {
             if(user.otp) {
-                res.status(401).send({success: false, message: 'go to the link sent in the email to activate account'});
+                res.status(200).send({success: false, message: 'go to the link sent in the email to activate account', redirectTo: 'email'});
             } else {
                 let token = jwt.sign(user.toJSON(), SECRET_KEY);
                 res.json({token: token});
             }
 
         } else {
-            res.status(401).send('Wrong Username or password');
+            res.status(201).send({status: false, message:'Wrong Username or password', redirectTo: 'error'});
         }
     })
 })
@@ -120,14 +124,14 @@ router.post('/verifyOTP', (req, res)=>{
     })
     .then((userData, err)=>{
         if(err) {
-            res.status(401).send('Some error occured');
+            res.status(201).send({success:false, message:'Some error occured in saving user data', redirectTo: 'error'});
         }
         if(check) {
             userData.loginRetryCount = userData.loginRetryCount + 1;
             let user = new User(userData);
             return user.save();
         } else {
-            res.status(200).send({success: true, redirectTo: '/login'});
+            res.status(200).send({success: true, redirectTo: 'login'});
         }
     })
     .then((user, err)=>{
@@ -158,7 +162,7 @@ router.post('/generateOTP', (req, res) => {
         let emailUtility = emailUtils.sendEmail(userData.email, text);
         emailUtility.transporter.sendMail(emailUtility.mailOptions, (err, data)=>{
             if(err) {
-                res.status(400).send('email not sent');
+                res.status(200).send('email not sent');
             } else {
                 res.status(200).send({success: true, message:'Email generated and sent, check email for otp', data: userCode});
             }
@@ -185,9 +189,9 @@ router.post('/forgotPassword', (req, res, next)=>{
     })
     .then(userData => {
         if(!userData) {
-            res.status(400).send('Password not updated');
+            res.status(200).send({success: false, message:'Password not updated', redirectTo: 'error'});
         }
-        res.status(200).send('Password updated successfully');
+        res.status(200).send({success:true, message:'Password updated successfully', redirectTo: 'login'});
     });
 });
 
@@ -208,7 +212,7 @@ router.post('/updatePassword', (req, res, next)=> {
     })
     .then(userData => {
         if(!authUtils.comparePassword(req.body.currentPassword, password)) {
-            res.status(401).send({success: false, message:'Wrong username password', redirectTo: '/'});
+            res.status(201).send({success: false, message:'Wrong username password', redirectTo: 'error'});
         } else {
             let newPassword = authUtils.hashPassword(req.body.newPassword).toString();
             userData.password = newPassword;
@@ -218,9 +222,9 @@ router.post('/updatePassword', (req, res, next)=> {
     })
     .then(userData => {
         if(!userData) {
-            res.status(400).send('Password not updated');
+            res.status(200).send({success: false, message:'Password not updated', redirectTo: 'error'});
         }
-        res.status(200).send('Password updated successfully');
+        res.status(200).send({success: true, message:'Password updated', redirectTo: 'login'});
     });
 });
 module.exports = router;

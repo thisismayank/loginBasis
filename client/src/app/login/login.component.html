@@ -1,3 +1,70 @@
-<p>
-  login works!
-</p>
+
+<div class="container">
+  <h1>Login Form</h1>
+  <div class="form-group" *ngIf="showPhoneNumberScreen">
+      <label> Phone Number </label>
+      <input [(ngModel)]='phoneNumber' type="tel" pattern="^[6789]\d{9}$" minlength="10" maxlength="10" placeholder="Enter only 10 digits" class="form-control">
+  </div>
+  <br>
+  <div class="form-group">
+      <button class="btn btn-success" (click)="check()">Login</button>
+      <button class="btn btn-warning" (click)="showGenerateOTP()">Forgot Password</button>
+
+  </div>
+</div>
+
+<div class="container" *ngIf="showPasswordScreen">
+  <h1>Login Form</h1>
+  <div class="form-group">
+      <label> Password </label>
+      <input [(ngModel)]='password' type="password" class="form-control">
+  </div>
+  <br>
+  <div class="form-group">
+      <button class="btn btn-success" (click)="login()">Login</button>
+  </div>
+</div>
+
+
+<div class="container" *ngIf="forgotPass">
+  <h1>Send OTP</h1>
+  <div class="form-group">
+      <label> Email </label>
+      <input [(ngModel)]='email' type="email" class="form-control">
+  </div>
+  <div class="form-group">
+    <label> User Code </label>
+    <input [(ngModel)]='userCode' type="text" class="form-control">
+</div>
+  <br>
+  <div class="form-group">
+      <button class="btn btn-success" (click)="generateOTP()">Send OTP</button>
+  </div>
+</div>
+
+
+<div class="container" *ngIf="showVerifyOtp">
+  <h1>Enter OTP</h1>
+  <div class="form-group">
+      <label> OTP </label>
+      <input [(ngModel)]='otp' type="text" class="form-control">
+  </div>
+  <br>
+  <div class="form-group">
+      <button class="btn btn-success" (click)="verifyOTP()">Submit</button>
+  </div>
+</div>
+
+
+<div class="container" *ngIf="showUpdatePasswordScreen">
+  <h1>Enter new password</h1>
+  <div class="form-group">
+      <label> Password </label>
+      <input [(ngModel)]='password' type="password" class="form-control">
+  </div>
+  <br>
+  <div class="form-group">
+      <button class="btn btn-success" (click)="forgotPassword()">Submit</button>
+  </div>
+</div>
+

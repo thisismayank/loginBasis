@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class UserService {
 
-  private baseUrl = 'localhost:3000';
+  private baseUrl = 'http://localhost:3000';
   constructor(private _httpClient: HttpClient) { }
 
   public check(phoneNumber) {
@@ -50,7 +50,7 @@ export class UserService {
   public verifyOTP(otp, userCode) {
     const path = '/verifyOTP';
     const body = {
-      otp: Number(userCode),
+      otp: Number(otp),
       userCode: userCode.toString()
     };
 
