@@ -8,71 +8,73 @@
   </div>
   <br>
   <div class="form-group">
-      <button class="btn btn-success loginBtnConfig" (click)="check()">Login</button>
+      <button class="btn btn-success btnConfig" (click)="check()">Login</button>
       <button class="btn btn-info registerBtnConfig" (click)="signup()">New? Register</button>
 
   </div>
 </div>
 
 <div class="container mainBlock" *ngIf="showPasswordScreen">
-  <h1>Enter Password</h1>
-  <div class="form-group">
-      <!-- <label> Password </label> -->
-      <input [(ngModel)]='password' type="password" placeholder="Password" class="form-control">
-  </div>
-  <span class="wrongCredentials">{{errorMessage}}</span>
-  <br>
-  <div class="form-group">
-      <button class="btn btn-success loginBtnConfig" (click)="login()">Login</button>
-      <button class="btn btn-warning outsideBtnConfig" (click)="showGenerateOTP()">Forgot Password</button>
-  </div>
+  <span>
+    <h1>Enter Password</h1>
+    <div class="form-group">
+        <!-- <label> Password </label> -->
+        <input [(ngModel)]='password' type="password" placeholder="Password" class="form-control">
+    </div>
+    <span class="wrongCredentials">{{errorMessage}}</span>
+    <br>
+    <div class="form-group">
+        <button class="btn btn-success btnConfig" (click)="login()">Login</button>
+        <button class="btn btn-warning outsideBtnConfig" (click)="showGenerateOTP()">Forgot Password</button>
+    </div>
+  </span>
 </div>
 
 
-<div class="mainBlock" *ngIf="forgotPass">
+<div class="container mainBlock" *ngIf="forgotPass">
   <h1>Send OTP</h1>
   <div class="form-group">
-      <label> Email </label>
-      <input [(ngModel)]='email' type="email" class="form-control">
+      <!-- <label> Email </label> -->
+      <input [(ngModel)]='email' type="email" placeholder="E-mail" class="form-control">
   </div>
   <div class="form-group">
-    <label> User Code </label>
-    <input [(ngModel)]='userCode' type="text" class="form-control">
+    <!-- <label> User Code </label> -->
+    <input [(ngModel)]='userCode' type="text" placeholder="User Code" class="form-control">
 </div>
   <br>
   <div class="form-group">
-      <button class="btn btn-success" (click)="generateOTP()">Send OTP</button>
+      <button class="btn btn-success btnConfig" (click)="generateOTP()">Send OTP</button>
   </div>
 </div>
 
 
-<div class="container" *ngIf="showVerifyOtp">
+<div class="container mainBlock" *ngIf="showVerifyOtp">
   <h1>Enter OTP</h1>
   <div class="form-group">
-      <label> OTP </label>
-      <input [(ngModel)]='otp' type="text" class="form-control">
+      <!-- <label> OTP </label> -->
+      <input [(ngModel)]='otp' type="text" placeholder="OTP" class="form-control">
   </div>
   <br>
   <div class="form-group">
-      <button class="btn btn-success" (click)="verifyOTP()">Submit</button>
+      <button class="btn btn-success btnConfig" (click)="verifyOTP()">Submit</button>
   </div>
 </div>
 
 
-<div class="container" *ngIf="showUpdatePasswordScreen">
+<div class="container mainBlock" *ngIf="showUpdatePasswordScreen">
   <h1>Enter new password</h1>
   <div class="form-group">
-      <label> Password </label>
-      <input [(ngModel)]='password' type="password" required class="form-control">
+      <!-- <label> Password </label> -->
+      <input [(ngModel)]='password' type="password" placeholder="Password" required class="form-control">
   </div>
   <div class="form-group">
-    <label> Re-enter Password </label>
-    <input [(ngModel)]='confirmPassword' type="password" required class="form-control">
+    <!-- <label> Re-enter Password </label> -->
+    <input [(ngModel)]='confirmPassword' type="password" placeholder="Re-enter Password" required class="form-control">
 </div>
 <span class="wrongCredentials">{{errorMessage}}</span>
   <br>
   <div class="form-group">
-      <button class="btn btn-success" (click)="forgotPassword()">Submit</button>
+      <button class="btn btn-success btnConfig" (click)="forgotPassword()">Submit</button>
   </div>
 </div>
 
