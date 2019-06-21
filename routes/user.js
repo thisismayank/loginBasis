@@ -25,6 +25,21 @@ router.get('/', (req, res)=>{
     res.status(200).send('');
 });
 
+router.get('/verifyToken/:token', (req, res)=>{
+    let error = false;
+        try {
+            jwt.verify(req.params.token, SECRET_KEY);
+        } catch(err) {
+            error = true; 
+        }
+
+        if(!error) {
+            res.json({success: true})
+        } else {
+            res.json({success: false})
+        }
+})
+
 router.get('/check/:phoneNumber', (req, res)=>{
     const phoneNumber = Number(req.params.phoneNumber);
     User.findOne({
@@ -67,7 +82,7 @@ router.post('/signup', (req, res, next)=>{
         }
 
         let url = body.url || 'localhost:3000';
-        let text = `Go to ${url}/verifyOTP and enter ${otp}`;
+        let text = `Your account activation otp is ${otp}`;
        
         let emailUtility = emailUtils.sendEmail(user.dataValues.email, text);
         emailUtility.transporter.sendMail(emailUtility.mailOptions, (err, data)=>{
@@ -157,7 +172,7 @@ router.post('/generateOTP', (req, res) => {
     })
     .then(userData => {
         let url = req.body.url || 'localhost:3000';
-        let text = `Go to ${url}/verifyOTP and enter ${otp}`;        
+        let text = `Your forgot password OTP is ${otp}`;        
 
         let emailUtility = emailUtils.sendEmail(userData.email, text);
         emailUtility.transporter.sendMail(emailUtility.mailOptions, (err, data)=>{

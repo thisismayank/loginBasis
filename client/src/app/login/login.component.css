@@ -1,0 +1,15 @@
+.wrongCredentials {
+    font-size: 12px;
+    font-weight: 700;
+    color: #ff0000;
+    font-style: italic; 
+    position: relative;
+    top: -15px;
+}
+
+.passwordBtnConfig {
+        float: right;
+        position: relative;
+        top: 10px;
+        right: -5%;
+}

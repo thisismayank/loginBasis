@@ -20,8 +20,10 @@ export class LoginComponent implements OnInit {
   otp: any;
   currentPassword: any;
   newPassword: any;
-  error: any;
+  errorMessage: any;
+  confirmPassword: any;
 
+  error: boolean;
   loggedIn: boolean;
   passedCheck: boolean;
   emailVerificationPending: boolean;
@@ -30,7 +32,10 @@ export class LoginComponent implements OnInit {
   showPasswordScreen: boolean;
   showPhoneNumberScreen: boolean;
   showUpdatePasswordScreen: boolean;
+
   ngOnInit() {
+    this.error = false;
+    this.errorMessage = '';
     this.showPhoneNumberScreen = true;
     this.showPasswordScreen = false;
     this.loggedIn = false;
@@ -39,6 +44,14 @@ export class LoginComponent implements OnInit {
     this.forgotPass = false;
     this.showVerifyOtp = false;
     this.showUpdatePasswordScreen = false;
+
+    this._authService.isLoggedIn().toPromise()
+    .then((response:any)=>{
+      if(response.success) {
+        this._router.navigate(['/user']);
+      }
+    });
+
   }
 
   check() {
@@ -61,6 +74,7 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
+    this.error = false;
     this._userService.login(this.phoneNumber, this.password).toPromise()
     .then((response: any) => {
       if(response.success === false) {
@@ -70,9 +84,12 @@ export class LoginComponent implements OnInit {
           this.showPasswordScreen = false;
           this.emailVerificationPending = true;
         } else {
-          this.error = 'Wrong username or password';
+          this.error = true;
+          this.errorMessage = '*Wrong username or password';
         }
       } else {
+        this.error = false;
+        this.errorMessage = '';
         localStorage.removeItem('token');
         localStorage.setItem('token', response.token);
         this._router.navigate(['/user'])
@@ -81,17 +98,27 @@ export class LoginComponent implements OnInit {
   }
 
   forgotPassword() {
-    this._userService.forgotPassword(this.userCode, this.email, this.password).toPromise()
-    .then((response:any) => {
-      if(response.success === true) {
-        this.showUpdatePasswordScreen = false;
-        this.showPhoneNumberScreen = true;
-      }
-
-    })
+    if(this.password !== this.confirmPassword) {
+      this.error = true;
+      this.errorMessage = `* Passwords don't match, please re-enter`;
+    } else if ( !this.password || !this.confirmPassword) {
+      this.errorMessage = 'All fields are mandatory, please enter something';
+    } else {
+      this.error = false;
+      this.errorMessage = '';
+      this._userService.forgotPassword(this.userCode, this.email, this.password).toPromise()
+      .then((response:any) => {
+        if(response.success === true) {
+          this.showUpdatePasswordScreen = false;
+          this.showPhoneNumberScreen = true;
+        }
+      })
+    }
+    
   }
 
   showGenerateOTP() {
+    this.showPasswordScreen = false;
     this.forgotPass = true;
   }
 

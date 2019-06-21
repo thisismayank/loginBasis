@@ -2,12 +2,17 @@
   <h1>Update Password</h1>
   <div class="form-group">
       <label> Current Password </label>
-      <input [(ngModel)]='currentPassword' type="password" class="form-control">
+      <input [(ngModel)]='currentPassword' type="password" required class="form-control">
   </div>
   <div class="form-group">
     <label> New Password </label>
-    <input [(ngModel)]='newPassword' type="password" class="form-control">
+    <input [(ngModel)]='newPassword' type="password" required class="form-control">
+  </div>
+  <div class="form-group">
+    <label> Re-enter Password </label>
+    <input [(ngModel)]='confirmPassword' type="password" required class="form-control">
 </div>
+<span class="wrongCredentials">{{errorMessage}}</span>
   <br>
   <div class="form-group">
       <button class="btn btn-warning" (click)="updatePassword()">Update Password</button>
@@ -15,4 +20,4 @@
 </div>
 
 <button class="btn btn-danger changePasswordBtn" *ngIf="!change" (click)="toggle()">Change Password</button>
-<button class="btn btn-danger changePasswordBtn" *ngIf="!change" (click)="logout()">Logout</button>
+<button class="btn btn-danger changePasswordBtn logoutBtn" *ngIf="!change" (click)="logout()">Logout</button>
