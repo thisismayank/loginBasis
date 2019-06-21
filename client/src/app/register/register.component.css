@@ -1,0 +1,46 @@
+.phoneInput {
+    padding-left:50px;
+}
+
+.wrongCredentials {
+    color: red;
+    font-style: italic;
+    font-size: small;
+    font-weight: bold;
+    padding-left: 10px;
+}
+
+.prefix {
+    display: inline;
+    position: relative;
+    top: -29px;
+    padding: 5px;
+    font-size: large;
+    background-color: lightgray;
+    border: 1px lightgray solid;
+}
+
+.registerBtnConfig {
+    position: relative;
+    width: 100%;
+    font-weight: 700;
+    font-size: large;
+    font-family: sans-serif;
+}
+
+h1 {
+    font-size: 24px;
+    text-align: center;
+    color: #79589F;
+    font-family: sans-serif;
+    padding-bottom: 20px;
+}
+
+.mainBlock {
+    height: 500px;
+    width: 500px;
+    margin-right: 25%;
+    border: 1px #d3d3d352 solid;
+    border-radius: 20px;
+    background-color: #d3d3d352;
+}

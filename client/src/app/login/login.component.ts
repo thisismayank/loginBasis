@@ -54,6 +54,10 @@ export class LoginComponent implements OnInit {
 
   }
 
+  signup() {
+    this._router.navigate(['/signup']);
+  }
+
   check() {
     this._userService.check(this.phoneNumber).toPromise()
     .then((response: any) => {

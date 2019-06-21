@@ -1,21 +1,21 @@
-<div class="container" *ngIf="change">
+<div class="container mainBlock" *ngIf="change">
   <h1>Update Password</h1>
   <div class="form-group">
-      <label> Current Password </label>
-      <input [(ngModel)]='currentPassword' type="password" required class="form-control">
+      <!-- <label> Current Password </label> -->
+      <input [(ngModel)]='currentPassword' type="password" placeholder="Current Password" required class="form-control">
   </div>
   <div class="form-group">
-    <label> New Password </label>
-    <input [(ngModel)]='newPassword' type="password" required class="form-control">
+    <!-- <label> New Password </label> -->
+    <input [(ngModel)]='newPassword' type="password" placeholder="New Password" required class="form-control">
   </div>
   <div class="form-group">
-    <label> Re-enter Password </label>
-    <input [(ngModel)]='confirmPassword' type="password" required class="form-control">
+    <!-- <label> Re-enter Password </label> -->
+    <input [(ngModel)]='confirmPassword' type="password" placeholder="Re-enter password" required class="form-control">
 </div>
 <span class="wrongCredentials">{{errorMessage}}</span>
   <br>
   <div class="form-group">
-      <button class="btn btn-warning" (click)="updatePassword()">Update Password</button>
+      <button class="btn btn-warning updateBtnConfig" (click)="updatePassword()">Update Password</button>
   </div>
 </div>
 

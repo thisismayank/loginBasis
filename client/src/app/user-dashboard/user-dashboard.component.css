@@ -9,11 +9,27 @@
     margin-right: 5px;
 }
 
-.wrongCredentials {
-    font-size: 12px;
-    font-weight: 700;
-    color: #ff0000;
-    font-style: italic; 
+.mainBlock {
+    height: 350px;
+    width: 500px;
+    margin-right: 25%;
+    border: 1px #d3d3d352 solid;
+    border-radius: 20px;
+    background-color: #d3d3d352;
+}
+
+h1 {
+    font-size: 24px;
+    text-align: center;
+    color: #79589F;
+    font-family: sans-serif;
+    padding-bottom: 20px;
+}
+
+.updateBtnConfig {
     position: relative;
-    top: -15px;
+    width: 100%;
+    font-weight: 700;
+    font-size: large;
+    font-family: sans-serif;
 }

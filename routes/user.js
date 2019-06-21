@@ -61,37 +61,55 @@ router.get('/check/:phoneNumber', (req, res)=>{
 router.post('/signup', (req, res, next)=>{
     const body = req.body;
     const otp = authUtils.generateOTP();
-    const data = {
-        _id: new mongoose.Types.ObjectId(),
-        firstName: body.firstName.toString(),
-        lastName: body.lastName ? body.lastName.toString():null,
-        phoneNumber: body.phoneNumber.toString(),
-        userCode: body.userCode.toString(),
-        email: body.email.toString(),
-        password: authUtils.hashPassword(req.body.password).toString(),
-        otp: otp,
-        loginRetryCount: 0,
-        isActive: true
-    };
-
-    const user = new User(data);
-    user.save()
-    .then((user, err)=>{
-        if(err) {
-            res.status(201).send({success: false, message:'User Not Created'});
-        }
-
-        let url = body.url || 'localhost:3000';
-        let text = `Your account activation otp is ${otp}`;
-       
-        let emailUtility = emailUtils.sendEmail(user.dataValues.email, text);
-        emailUtility.transporter.sendMail(emailUtility.mailOptions, (err, data)=>{
-            if(err) {
-                res.status(201).send({success: false, message:'User not created'});
-            } else {
-                res.status(200).send({success: true, message:'User created, check email for otp'});
+    User.findOne({
+        $or: [
+            {
+                phoneNumber: Number(req.body.phoneNumber),
+                isActive: true
+            },{
+                userCode: req.body.userCode.toString(),
+                isActive: true
             }
-        });
+        ]
+    })
+    .then((userData, err) =>{
+        if(userData) {
+            res.status(201).send({success: false, message: 'User already exists', redirectTo: 'error'});
+            return 'exists';
+        } else {
+            const data = {
+                _id: new mongoose.Types.ObjectId(),
+                firstName: body.firstName.toString(),
+                lastName: body.lastName ? body.lastName.toString():null,
+                phoneNumber: body.phoneNumber.toString(),
+                userCode: body.userCode.toString(),
+                email: body.email.toString(),
+                password: authUtils.hashPassword(req.body.password).toString(),
+                otp: otp,
+                loginRetryCount: 0,
+                isActive: true
+            };
+
+            const user = new User(data);
+            return user.save();
+        }
+    })
+    .then((userData, err)=>{
+        if(err || !userData) {
+            res.status(201).send({success: false, message:'User Not Created', redirectTo: 'signup'});
+        } else if(userData !== 'exists' ) {
+            let url = body.url || 'localhost:3000';
+            let text = `Your account activation otp is ${otp}`;
+        
+            let emailUtility = emailUtils.sendEmail(userData.email, text);
+            emailUtility.transporter.sendMail(emailUtility.mailOptions, (err, data)=>{
+                if(err) {
+                    res.status(201).send({success: false, message:'Email not sent', redirectTo: 'login'});
+                } else {
+                    res.status(200).send({success: true, message:'User created and email sent, check email for otp'});
+                }
+            });
+        }
     });
 });
 
