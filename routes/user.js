@@ -21,10 +21,6 @@ const mongoose = require('mongoose');
 // to handle cross-origin-requests
 router.use(cors());
 
-router.get('/', (req, res)=>{
-    res.status(200).send('');
-});
-
 router.get('/verifyToken/:token', (req, res)=>{
     let error = false;
         try {
